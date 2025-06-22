@@ -19,40 +19,35 @@ order by period;
 with 
 sale_info as (
   SELECT 
-      FORMAT_TIMESTAMP("%Y", a.ModifiedDate) as yr
-      , c.Name
-      , sum(a.OrderQty) as qty_item
-
+      FORMAT_TIMESTAMP("%Y", a.ModifiedDate) as yr,
+      c.Name,
+      sum(a.OrderQty) as qty_item
   FROM `adventureworks2019.Sales.SalesOrderDetail` a 
   LEFT JOIN `adventureworks2019.Production.Product` b on a.ProductID = b.ProductID
   LEFT JOIN `adventureworks2019.Production.ProductSubcategory` c on cast(b.ProductSubcategoryID as int) = c.ProductSubcategoryID
-
   GROUP BY 1,2
-  ORDER BY 2 asc , 1 desc
 ),
 
 sale_diff as (
-  select *
-  , lead (qty_item) over (partition by Name order by yr desc) as prv_qty
-  , round(qty_item / (lead (qty_item) over (partition by Name order by yr desc)) -1,2) as qty_diff
+  select *,
+    lead(qty_item) over (partition by Name order by yr desc) as prv_qty,
+    round(qty_item / lead(qty_item) over (partition by Name order by yr desc) - 1, 2) as qty_diff
   from sale_info
-  order by 5 desc 
 ),
 
 rk_qty_diff as (
-  select *
-      ,dense_rank() over( order by qty_diff desc) dk
+  select *,
+    dense_rank() over(order by qty_diff desc) as dk
   from sale_diff
 )
 
-select distinct Name
-      , qty_item
-      , prv_qty
-      , qty_diff
-from rk_qty_diff 
-where dk <=3
-order by dk ;
-
+select Name, qty_item, prv_qty, qty_diff
+from (
+  select Name, qty_item, prv_qty, qty_diff, dk
+  from rk_qty_diff
+  where dk <= 3
+)
+order by dk;
 
 --q3
 WITH base_data AS (
@@ -196,7 +191,7 @@ stock_info as (
       , extract(year from ModifiedDate) as yr 
       , ProductId
       , sum(StockedQty) as stock_cnt
-  from 'adventureworks2019.Production.WorkOrder'
+  from `adventureworks2019.Production.WorkOrder`
   where FORMAT_TIMESTAMP("%Y", ModifiedDate) = '2011'
   group by 1,2,3
 )
@@ -213,15 +208,6 @@ and a.yr = b.yr
 order by 1 desc, 7 desc;
 
 --q8
-SELECT
-  2014 AS Year,
-  1 AS Status,
-  COALESCE(COUNT(DISTINCT PurchaseOrderID), 0) AS Order_Cnt,
-  COALESCE(SUM(TotalDue), 0) AS Value
-FROM `adventureworks2019.Purchasing.PurchaseOrderHeader`
-WHERE Status = 1 AND extract(YEAR from OrderDate) = 2014;
-
--->
 select 
     extract (year from ModifiedDate) as yr
     , Status
@@ -230,5 +216,4 @@ select
 from `adventureworks2019.Purchasing.PurchaseOrderHeader`
 where Status = 1
 and extract(year from ModifiedDate) = 2014
-group by 1,2
-;
+group by 1,2;

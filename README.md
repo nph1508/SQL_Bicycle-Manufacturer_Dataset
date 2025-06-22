@@ -3,7 +3,21 @@
 Dataset Dictionary:	https://drive.google.com/file/d/1bwwsS3cRJYOg1cvNppc1K_8dQLELN16T/view?usp=share_link
 ## Query 01: Calc Quantity of items, Sales value & Order quantity by each Subcategory in L12M
 ```sql
-
+SELECT 
+  FORMAT_DATE('%b %Y', sale.ModifiedDate) as period
+  , pro.Name as name
+  , sum(sale.OrderQty) as qty_item
+  , sum(sale.LineTotal) as total_sale
+  , count(distinct sale.SalesOrderID) as order_cnt
+FROM `adventureworks2019.Sales.SalesOrderDetail` as sale
+JOIN `adventureworks2019.Production.Product` as pro
+USING (ProductID)
+WHERE DATE(sale.ModifiedDate) >= (
+    SELECT DATE_SUB(MAX(DATE(sale.ModifiedDate)), INTERVAL 12 MONTH) 
+    FROM `adventureworks2019.Sales.SalesOrderDetail`
+)
+Group by period, pro.Name
+order by period;
 ```
 ### ✅ Results:
 

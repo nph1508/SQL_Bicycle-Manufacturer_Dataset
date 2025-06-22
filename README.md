@@ -1,16 +1,14 @@
 # SQL_Bicycle-Manufacturer_Dataset
 ## DATASET
 Dataset Dictionary:	https://drive.google.com/file/d/1bwwsS3cRJYOg1cvNppc1K_8dQLELN16T/view?usp=share_link
-## Query 01: 
-
+## Query 01: Calc Quantity of items, Sales value & Order quantity by each Subcategory in L12M
 ```sql
 
 ```
 ### ✅ Results:
 
-
 **📝 Observation:** 
-## Query 02: 
+## Query 02: Calc % YoY growth rate by SubCategory & release top 3 cat with highest grow rate. Can use metric: quantity_item. Round results to 2 decimal
 ```sql
 with 
 sale_info as (
@@ -57,7 +55,7 @@ order by dk;
 | Road Frames     | 5564     | 1137    | 3.89     |
 
 **📝 Observation:** 
-## Query 3: 
+## Query 3: Ranking Top 3 TeritoryID with biggest Order quantity of every year. If there's TerritoryID with same quantity in a year, do not skip the rank number
 ```sql
 WITH base_data AS (
   SELECT
@@ -103,7 +101,7 @@ ORDER BY yr, rk;
 | 2014 | 1 | 8823 | 3 |
 
 **📝 Observation:** 
-## Query 04: 
+## Query 04: Calc Total Discount Cost belongs to Seasonal Discount for each SubCategory
 ```sql
 select 
     FORMAT_TIMESTAMP("%Y", ModifiedDate)
@@ -129,7 +127,7 @@ group by 1,2;
 | 2013 | Helmets | 543.21975 |
 
 **📝 Observation:** 
-## Query 05: 
+## Query 05: Retention rate of Customer in 2014 with status of Successfully Shipped (Cohort Analysis)
 ```sql
 with info as(
   select
@@ -208,7 +206,7 @@ order by 1;
 | 7 | M - 0 | 148 |
 
 **📝 Observation:** 
-## Query 06: 
+## Query 06: Trend of Stock level & MoM diff % by all product in 2011. If %gr rate is null then 0. Round to 1 decimal
 ```sql
 with 
 raw_data as (
@@ -971,7 +969,8 @@ order by 1 asc, 2 desc;
 | Top Tube | 6 | 2011 | 640 |  | 0 |
 
 **📝 Observation:** 
-## Query 07: 
+## Query 07: "Calc Ratio of Stock / Sales in 2011 by product name, by month
+Order results by month desc, ratio desc. Round Ratio to 1 decimal. mom yoy"
 ```sql
 with 
 sale_info as (
@@ -1829,7 +1828,7 @@ order by 1 desc, 7 desc;
 |  |  |  |  |  | 150 |  |
 
 **📝 Observation:** 
-## "Query 08:
+## "Query 08: No of order and value at Pending status in 2014
 ```sql
 select 
     extract (year from ModifiedDate) as yr

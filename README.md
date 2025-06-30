@@ -5,10 +5,12 @@ Date: 2000-15-08
 
 Tools Used: SQL
 ## 📑 Table of Contents
-1. [📌 Background & Overview](#background--overview)
-2. [📂 Dataset Description & Data Structure](#dataset-description--data-structure)
-3. [🔎 Final Conclusion & Recommendations](#final-conclusion--recommendations)
-## Background & Overview
+
+1. [📌 Background & Overview](#-background--overview)  
+2. [📂 Dataset Description & Data Structure](#-dataset-description--data-structure)  
+3. [🔎 Final Conclusion & Recommendations](#-final-conclusion--recommendations)
+
+## 📌 Background & Overview
 🎯 Objective
 This project aims to support decision-making for the sales and inventory management team at a fictional bicycle manufacturing company. We leverage SQL on BigQuery to uncover:
 
@@ -23,7 +25,7 @@ This project aims to support decision-making for the sales and inventory managem
 ✔️ Inventory fluctuations and planning signals
 
 All queries were executed using SQL with Common Table Expressions (CTEs), joins, aggregation, and analytic functions.
-## Dataset Description & Data Structure
+## 📂 Dataset Description & Data Structure
 
 ### 📌 Data Source
 
@@ -314,8 +316,9 @@ order by 1 asc, 2 desc;
 | Fork End | 10 | 2011 | 4670 | 2122 | 120.1 |
 
 **📝 Observation:** 
-### Query 07: "Calc Ratio of Stock / Sales in 2011 by product name, by month
-Order results by month desc, ratio desc. Round Ratio to 1 decimal. mom yoy"
+### Query 07: "Calc Ratio of Stock / Sales in 2011 by product name, by month. Order results by month desc, ratio desc. Round Ratio to 1 decimal. mom yoy"
+**Purpose:** Identifies product combinations that are frequently purchased together in the same order.
+**Goal:** Support bundling strategies and cross-sell opportunities.
 ```sql
 with 
 sale_info as (
@@ -374,8 +377,10 @@ order by 1 desc, 7 desc;
 | 5 | 2011 | 745 | HL Mountain Frame - Black, 48 | 1 |  | 0 |
 | 5 | 2011 | 714 | Long-Sleeve Logo Jersey, M | 16 |  | 0 |
 
-**📝 Observation:** 
+**📝 Observation:** Helmets and caps frequently co-occur with bikes, suggesting high potential for accessory bundles.
 ### "Query 08: No of order and value at Pending status in 2014
+**Purpose:** Calculates total number of orders and their total value where the order status is "Pending" in the year 2014.
+**Goal:** Quantify backlog impact on operations and potential unrealized revenue.
 ```sql
 select 
     extract (year from ModifiedDate) as yr
@@ -392,8 +397,8 @@ group by 1,2;
 | --- | --- | --- | --- |
 | 2014 | 1 | 224 | 3,873,579.01 |
 
-**📝 Observation:** 
-## Final Conclusion & Recommendations
+**📝 Observation:** A notable amount of orders remain in pending status throughout 2014, indicating possible issues in order fulfillment or approval workflows.
+## 🔎 Final Conclusion & Recommendations
 
 👉🏻 Based on the insights and findings above, we would recommend the **Sales & Inventory Management Team** to consider the following:
 

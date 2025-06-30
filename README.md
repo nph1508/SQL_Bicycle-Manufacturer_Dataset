@@ -71,8 +71,19 @@ WHERE DATE(sale.ModifiedDate) >= (
 Group by period, pro.Name
 order by period;
 ```
-#### ✅ Results:
-
+** ✅ Results:** 
+| month     | Name        | qty_item | total_sales    | order_cnt |
+|-----------|-------------|----------|----------------|-----------|
+| Apr 2014  | Bib-Shorts  | 4        | 233.974        | 1         |
+| Feb 2014  | Bib-Shorts  | 4        | 233.974        | 2         |
+| Jul 2013  | Bib-Shorts  | 2        | 116.987        | 1         |
+| Jun 2013  | Bib-Shorts  | 2        | 116.987        | 1         |
+| Apr 2014  | Bike Racks  | 45       | 5400.0         | 45        |
+| Aug 2013  | Bike Racks  | 222      | 17387.183      | 63       |
+| Dec 2013  | Bike Racks  | 162      | 12582.288      | 48        |
+| Feb 2014  | Bike Racks  | 27       | 3240.0         | 27        |
+| Jan 2014  | Bike Racks  | 161      | 12840.0        | 53        |
+| Jul 2013  | Bike Racks  | 422      | 29802.3        | 75        |
 **📝 Observation:** 
 ### Query 02: Calc % YoY growth rate by SubCategory & release top 3 cat with highest grow rate. Can use metric: quantity_item. Round results to 2 decimal
 **Purpose:** Calculates Year-over-Year growth rate in item quantity by subcategory and identifies top 3 subcategories with highest growth.  
@@ -115,7 +126,7 @@ from (
 )
 order by dk;
 ```
-#### ✅ Results:
+** ✅ Results:** 
 | Name            | qty_item | prv_qty | qty_diff |
 | --------------- | -------- | ------- | -------- |
 | Mountain Frames | 3168     | 510     | 5.21     |
@@ -154,7 +165,7 @@ FROM ranked_data
 WHERE rk <= 3
 ORDER BY yr, rk;
 ```
-#### ✅ Results:
+** ✅ Results:** 
 | yr | TerritoryID | order_cnt | rk |
 | --- | --- | --- | --- |
 | 2011 | 4 | 3238 | 1 |
@@ -192,7 +203,7 @@ from (
 )
 group by 1,2;
 ```
-#### ✅ Results:
+** ✅ Results:** 
 | f0_ | Name | total_cost |
 | --- | --- | --- |
 | 2012 | Helmets | 149.71669 |
@@ -247,7 +258,7 @@ from all_join
 group by 1,2
 order by 1;
 ```
-#### ✅ Results:
+** ✅ Results:** 
 | mth_join | mth_diff | customer_cnt |
 | --- | --- | --- |
 | 1 | M - 0 | 2076 |
@@ -293,7 +304,7 @@ from (
       )
 order by 1 asc, 2 desc;
 ```
-#### ✅ Results:
+** ✅ Results:** 
 | Name | mth | yr | stock_qty | stock_prv | diff |
 | --- | --- | --- | --- | --- | --- |
 | BB Ball Bearing | 12 | 2011 | 8475 | 14544 | -41.7 |
@@ -357,7 +368,7 @@ and a.mth = b.mth
 and a.yr = b.yr
 order by 1 desc, 7 desc;
 ```
-#### ✅ Results:
+** ✅ Results:** 
 | mth | yr | ProductId | Name | sales | stock | ratio |
 | --- | --- | --- | --- | --- | --- | --- |
 | 12 | 2011 | 745 | HL Mountain Frame - Black, 48 | 1 | 27 | 27 |
@@ -392,7 +403,7 @@ where Status = 1
 and extract(year from ModifiedDate) = 2014
 group by 1,2;
 ```
-#### ✅ Results:
+** ✅ Results:** 
 | yr | Status | order_Cnt | value |
 | --- | --- | --- | --- |
 | 2014 | 1 | 224 | 3,873,579.01 |

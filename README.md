@@ -4,12 +4,15 @@ Author: Nguyễn Phương Huy
 Date: 2000-15-08
 
 Tools Used: SQL
+
+---
 ## 📑 Table of Contents
 
 1. [📌 Background & Overview](#-background--overview)  
 2. [📂 Dataset Description & Data Structure](#-dataset-description--data-structure)  
 3. [🔎 Final Conclusion & Recommendations](#-final-conclusion--recommendations)
 
+---
 ## 📌 Background & Overview
 🎯 Objective
 This project aims to support decision-making for the sales and inventory management team at a fictional bicycle manufacturing company. We leverage SQL on BigQuery to uncover:
@@ -50,6 +53,8 @@ All queries were executed using SQL with Common Table Expressions (CTEs), joins,
 - `ProductInventory` provides stock levels over time
 
 > 📌 All tables joined via foreign key relationships using `ProductID`, `SalesOrderID`, `CustomerID`, `TerritoryID`.
+
+---
 ## ⚒️Main Process
 ### Query 01: Calc Quantity of items, Sales value & Order quantity by each Subcategory in L12M
 **Purpose:** Calculates quantity sold, total sales, and number of orders by product subcategory over the last 12 months.  
@@ -84,7 +89,7 @@ order by period;
 | Feb 2014  | Bike Racks  | 27       | 3240.0         | 27        |
 | Jan 2014  | Bike Racks  | 161      | 12840.0        | 53        |
 | Jul 2013  | Bike Racks  | 422      | 29802.3        | 75        |
-**📝 Observation:** 
+**📝 Observation:** Bike Racks dominate sales volume, while Bib-Shorts show lower but consistent demand.
 ### Query 02: Calc % YoY growth rate by SubCategory & release top 3 cat with highest grow rate. Can use metric: quantity_item. Round results to 2 decimal
 **Purpose:** Calculates Year-over-Year growth rate in item quantity by subcategory and identifies top 3 subcategories with highest growth.  
 **Goal:** Detect which subcategories are expanding fastest and deserve investment.
@@ -133,7 +138,7 @@ order by dk;
 | Socks           | 2724     | 523     | 4.21     |
 | Road Frames     | 5564     | 1137    | 3.89     |
 
-**📝 Observation:** 
+**📝 Observation:** Mountain Frames, Socks, and Road Frames exhibit explosive YoY growth (>300%), signaling high market demand.
 ### Query 3: Ranking Top 3 TeritoryID with biggest Order quantity of every year. If there's TerritoryID with same quantity in a year, do not skip the rank number
 **Purpose:** Ranks the top 3 sales territories each year by total order quantity using DENSE_RANK to handle ties.  
 **Goal:** Monitor geographical sales performance and territory contribution over time.
@@ -181,7 +186,7 @@ ORDER BY yr, rk;
 | 2014 | 6 | 9711 | 2 |
 | 2014 | 1 | 8823 | 3 |
 
-**📝 Observation:** 
+**📝 Observation:** Territory 4 consistently ranks #1 annually, suggesting strong regional performance.
 ### Query 04: Calc Total Discount Cost belongs to Seasonal Discount for each SubCategory
 **Purpose:** Calculates the total discount cost applied under "Seasonal Discount" for each subcategory and year.  
 **Goal:** Measure promotional investment and its cost distribution across subcategories.
@@ -209,7 +214,7 @@ group by 1,2;
 | 2012 | Helmets | 149.71669 |
 | 2013 | Helmets | 543.21975 |
 
-**📝 Observation:** 
+**📝 Observation:** Seasonal discounts for Helmets peaked in 2013, indicating targeted promotional efforts.
 ### Query 05: Retention rate of Customer in 2014 with status of Successfully Shipped (Cohort Analysis)
 **Purpose:** Performs cohort analysis to track how many customers in each join-month return to make repeat purchases in later months.  
 **Goal:** Analyze retention behavior of customers who had successfully shipped orders during 2014.
@@ -272,7 +277,7 @@ order by 1;
 | 2 | M - 2 | 61 |
 | 2 | M - 3 | 234 |
 
-**📝 Observation:** 
+**📝 Observation:** Customer retention drops sharply after Month 0, highlighting challenges in repeat purchases.
 ### Query 06: Trend of Stock level & MoM diff % by all product in 2011. If %gr rate is null then 0. Round to 1 decimal
 **Purpose:** Tracks stock quantity for all products monthly in 2011 and computes Month-over-Month % change.  
 **Goal:** Identify inventory fluctuations and spot products with inconsistent stock trends (e.g., overstocking or stockouts).
@@ -326,7 +331,7 @@ order by 1 asc, 2 desc;
 | Fork End | 11 | 2011 | 3598 | 4670 | -23 |
 | Fork End | 10 | 2011 | 4670 | 2122 | 120.1 |
 
-**📝 Observation:** 
+**📝 Observation:** Inventory fluctuates drastically (e.g., BB Ball Bearing: -41.7% in Dec), revealing unstable stock management.
 ### Query 07: "Calc Ratio of Stock / Sales in 2011 by product name, by month. Order results by month desc, ratio desc. Round Ratio to 1 decimal. mom yoy"
 **Purpose:** Identifies product combinations that are frequently purchased together in the same order.
 **Goal:** Support bundling strategies and cross-sell opportunities.
@@ -388,7 +393,7 @@ order by 1 desc, 7 desc;
 | 5 | 2011 | 745 | HL Mountain Frame - Black, 48 | 1 |  | 0 |
 | 5 | 2011 | 714 | Long-Sleeve Logo Jersey, M | 16 |  | 0 |
 
-**📝 Observation:** Helmets and caps frequently co-occur with bikes, suggesting high potential for accessory bundles.
+**📝 Observation:** High stock-to-sales ratios (e.g., 56:1) suggest overstocking for specific products like Road-650 Red.
 ### "Query 08: No of order and value at Pending status in 2014
 **Purpose:** Calculates total number of orders and their total value where the order status is "Pending" in the year 2014.
 **Goal:** Quantify backlog impact on operations and potential unrealized revenue.
@@ -408,7 +413,9 @@ group by 1,2;
 | --- | --- | --- | --- |
 | 2014 | 1 | 224 | 3,873,579.01 |
 
-**📝 Observation:** A notable amount of orders remain in pending status throughout 2014, indicating possible issues in order fulfillment or approval workflows.
+**📝 Observation:** 224 pending orders (≈$3.87M) in 2014 point to potential fulfillment bottlenecks.
+
+---
 ## 🔎 Final Conclusion & Recommendations
 
 👉🏻 Based on the insights and findings above, we would recommend the **Sales & Inventory Management Team** to consider the following:

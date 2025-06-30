@@ -1,4 +1,4 @@
-# SQL_Bicycle-Manufacturer_Dataset
+# SQL for Bicycle Manufacturing: Exploring Sales & Product Data
 ## DATASET
 Dataset Dictionary:	https://drive.google.com/file/d/1bwwsS3cRJYOg1cvNppc1K_8dQLELN16T/view?usp=share_link
 ## Query 01: Calc Quantity of items, Sales value & Order quantity by each Subcategory in L12M

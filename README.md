@@ -1,4 +1,4 @@
-# SQL for Bicycle Manufacturing: Exploring Sales & Product Data
+# Exploring Sales & Product Performance in Bicycle Manufacturing | SQL
 Author: Nguyễn Phương Huy
 
 Date: 2000-15-08

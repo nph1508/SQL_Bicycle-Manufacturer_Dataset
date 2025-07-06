@@ -60,20 +60,21 @@ All queries were executed using SQL with Common Table Expressions (CTEs), joins,
 **Purpose:** Calculates quantity sold, total sales, and number of orders by product subcategory over the last 12 months.  
 **Goal:** Understand sales performance by product name to identify strong and weak performers.
 ```sql
-SELECT 
-  FORMAT_DATE('%b %Y', sale.ModifiedDate) as period
+select 
+  format_date('%b %Y', sale.ModifiedDate) as period
   , pro.Name as name
   , sum(sale.OrderQty) as qty_item
   , sum(sale.LineTotal) as total_sale
   , count(distinct sale.SalesOrderID) as order_cnt
-FROM `adventureworks2019.Sales.SalesOrderDetail` as sale
-JOIN `adventureworks2019.Production.Product` as pro
-USING (ProductID)
-WHERE DATE(sale.ModifiedDate) >= (
-    SELECT DATE_SUB(MAX(DATE(sale.ModifiedDate)), INTERVAL 12 MONTH) 
-    FROM `adventureworks2019.Sales.SalesOrderDetail`
+from `adventureworks2019.Sales.SalesOrderDetail` as sale
+join `adventureworks2019.Production.Product` as pro
+using (ProductID)
+where date(sale.ModifiedDate) >=
+(
+    select date_sub(max(date(sale.ModifiedDate)), interval 12 month) 
+    from `adventureworks2019.Sales.SalesOrderDetail`
 )
-Group by period, pro.Name
+group by period, pro.Name
 order by period;
 ```
 ** ✅ Results:** 
@@ -84,11 +85,12 @@ order by period;
 | Jul 2013  | Bib-Shorts  | 2        | 116.987        | 1         |
 | Jun 2013  | Bib-Shorts  | 2        | 116.987        | 1         |
 | Apr 2014  | Bike Racks  | 45       | 5400.0         | 45        |
-| Aug 2013  | Bike Racks  | 222      | 17387.183      | 63       |
+| Aug 2013  | Bike Racks  | 222      | 17387.183      | 63        |
 | Dec 2013  | Bike Racks  | 162      | 12582.288      | 48        |
 | Feb 2014  | Bike Racks  | 27       | 3240.0         | 27        |
 | Jan 2014  | Bike Racks  | 161      | 12840.0        | 53        |
 | Jul 2013  | Bike Racks  | 422      | 29802.3        | 75        |
+
 **📝 Observation:** Bike Racks dominate sales volume, while Bib-Shorts show lower but consistent demand.
 ### Query 02: Calc % YoY growth rate by SubCategory & release top 3 cat with highest grow rate. Can use metric: quantity_item. Round results to 2 decimal
 **Purpose:** Calculates Year-over-Year growth rate in item quantity by subcategory and identifies top 3 subcategories with highest growth.  
@@ -96,14 +98,14 @@ order by period;
 ```sql
 with 
 sale_info as (
-  SELECT 
-      FORMAT_TIMESTAMP("%Y", a.ModifiedDate) as yr,
+  select 
+      format_timestamp("%Y", a.ModifiedDate) as year,
       c.Name,
       sum(a.OrderQty) as qty_item
-  FROM `adventureworks2019.Sales.SalesOrderDetail` a 
-  LEFT JOIN `adventureworks2019.Production.Product` b on a.ProductID = b.ProductID
-  LEFT JOIN `adventureworks2019.Production.ProductSubcategory` c on cast(b.ProductSubcategoryID as int) = c.ProductSubcategoryID
-  GROUP BY 1,2
+  from `adventureworks2019.Sales.SalesOrderDetail` a 
+  left join `adventureworks2019.Production.Product` b on a.ProductID = b.ProductID
+  left join `adventureworks2019.Production.ProductSubcategory` c on cast(b.ProductSubcategoryID as int) = c.ProductSubcategoryID
+  group by 1,2
 ),
 
 sale_diff as (
@@ -143,32 +145,32 @@ order by dk;
 **Purpose:** Ranks the top 3 sales territories each year by total order quantity using DENSE_RANK to handle ties.  
 **Goal:** Monitor geographical sales performance and territory contribution over time.
 ```sql
-WITH base_data AS (
-  SELECT
-    EXTRACT(YEAR FROM SH.OrderDate) AS yr,
+with base_data as (
+  select
+    extract(year from SH.OrderDate) as yr,
     SH.TerritoryID,
-    SUM(SD.OrderQty) AS TotalQty
-  FROM `adventureworks2019.Sales.SalesOrderDetail` AS SD
-  JOIN `adventureworks2019.Sales.SalesOrderHeader` AS SH
-    ON SD.SalesOrderID = SH.SalesOrderID
-  GROUP BY yr, SH.TerritoryID
+    sum(SD.OrderQty) as TotalQty
+  from `adventureworks2019.Sales.SalesOrderDetail` AS SD
+  join `adventureworks2019.Sales.SalesOrderHeader` AS SH
+    on SD.SalesOrderID = SH.SalesOrderID
+  group by yr, SH.TerritoryID
 ),
 ranked_data AS (
-  SELECT
+  select
     yr,
     TerritoryID,
     TotalQty,
-    DENSE_RANK() OVER (PARTITION BY yr ORDER BY TotalQty DESC) AS rk
-  FROM base_data
+    dense_rank() over (partition by yr order by TotalQty desc) as rk
+  from base_data
 )
-SELECT 
+select 
   yr,
   TerritoryID,
   TotalQty AS order_cnt,
   rk
-FROM ranked_data
-WHERE rk <= 3
-ORDER BY yr, rk;
+from ranked_data
+where rk <= 3
+order by yr, rk;
 ```
 ** ✅ Results:** 
 | yr | TerritoryID | order_cnt | rk |
@@ -192,7 +194,7 @@ ORDER BY yr, rk;
 **Goal:** Measure promotional investment and its cost distribution across subcategories.
 ```sql
 select 
-    FORMAT_TIMESTAMP("%Y", ModifiedDate)
+    format_timestamp("%Y", ModifiedDate)
     , Name
     , sum(disc_cost) as total_cost
 from (
@@ -201,10 +203,10 @@ from (
       , d.DiscountPct, d.Type
       , a.OrderQty * d.DiscountPct * UnitPrice as disc_cost 
       from `adventureworks2019.Sales.SalesOrderDetail` a
-      LEFT JOIN `adventureworks2019.Production.Product` b on a.ProductID = b.ProductID
-      LEFT JOIN `adventureworks2019.Production.ProductSubcategory` c on cast(b.ProductSubcategoryID as int) = c.ProductSubcategoryID
-      LEFT JOIN `adventureworks2019.Sales.SpecialOffer` d on a.SpecialOfferID = d.SpecialOfferID
-      WHERE lower(d.Type) like '%seasonal discount%' 
+      left join `adventureworks2019.Production.Product` b on a.ProductID = b.ProductID
+      left join `adventureworks2019.Production.ProductSubcategory` c on cast(b.ProductSubcategoryID as int) = c.ProductSubcategoryID
+      left join `adventureworks2019.Sales.SpecialOffer` d on a.SpecialOfferID = d.SpecialOfferID
+      where lower(d.Type) like '%seasonal discount%' 
 )
 group by 1,2;
 ```

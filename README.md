@@ -77,7 +77,7 @@ where date(sale.ModifiedDate) >=
 group by period, pro.Name
 order by period;
 ```
-** ✅ Results:** 
+**✅ Results:** 
 | month     | Name        | qty_item | total_sales    | order_cnt |
 |-----------|-------------|----------|----------------|-----------|
 | Apr 2014  | Bib-Shorts  | 4        | 233.974        | 1         |
@@ -133,7 +133,7 @@ from (
 )
 order by dk;
 ```
-** ✅ Results:** 
+**✅ Results:**
 | Name            | qty_item | prv_qty | qty_diff |
 | --------------- | -------- | ------- | -------- |
 | Mountain Frames | 3168     | 510     | 5.21     |
@@ -147,33 +147,33 @@ order by dk;
 ```sql
 with base_data as (
   select
-    extract(year from SH.OrderDate) as yr,
+    extract(year from SH.OrderDate) as year,
     SH.TerritoryID,
     sum(SD.OrderQty) as TotalQty
-  from `adventureworks2019.Sales.SalesOrderDetail` AS SD
-  join `adventureworks2019.Sales.SalesOrderHeader` AS SH
+  from `adventureworks2019.Sales.SalesOrderDetail` as SD
+  join `adventureworks2019.Sales.SalesOrderHeader` as SH
     on SD.SalesOrderID = SH.SalesOrderID
-  group by yr, SH.TerritoryID
+  group by year, SH.TerritoryID
 ),
 ranked_data AS (
   select
-    yr,
+    year,
     TerritoryID,
     TotalQty,
-    dense_rank() over (partition by yr order by TotalQty desc) as rk
+    dense_rank() over (partition by yr order by TotalQty desc) as rank
   from base_data
 )
 select 
-  yr,
+  year,
   TerritoryID,
   TotalQty AS order_cnt,
-  rk
+  rank
 from ranked_data
-where rk <= 3
-order by yr, rk;
+where rank <= 3
+order by year, rank;
 ```
-** ✅ Results:** 
-| yr | TerritoryID | order_cnt | rk |
+**✅ Results:**
+| year | TerritoryID | order_cnt | rank |
 | --- | --- | --- | --- |
 | 2011 | 4 | 3238 | 1 |
 | 2011 | 6 | 2705 | 2 |
@@ -194,11 +194,11 @@ order by yr, rk;
 **Goal:** Measure promotional investment and its cost distribution across subcategories.
 ```sql
 select 
-    format_timestamp("%Y", ModifiedDate)
+    format_timestamp("%Y", ModifiedDate) as year
     , Name
     , sum(disc_cost) as total_cost
 from (
-      select distinct a.ModifiedDate
+      select distinct a.ModifiedDate 
       , c.Name
       , d.DiscountPct, d.Type
       , a.OrderQty * d.DiscountPct * UnitPrice as disc_cost 
@@ -210,8 +210,8 @@ from (
 )
 group by 1,2;
 ```
-** ✅ Results:** 
-| f0_ | Name | total_cost |
+**✅ Results:** 
+| yearr | Name | total_cost |
 | --- | --- | --- |
 | 2012 | Helmets | 149.71669 |
 | 2013 | Helmets | 543.21975 |
@@ -223,8 +223,8 @@ group by 1,2;
 ```sql
 with info as(
   select
-    extract(month from ModifiedDate) AS mth_order,
-    extract(year from ModifiedDate) AS yr,
+    extract(month from ModifiedDate) as mth_order,
+    extract(year from ModifiedDate) as yr,
     CustomerID,
     count(distinct SalesOrderID) as sales_cnt
   from `adventureworks2019.Sales.SalesOrderHeader`
@@ -265,7 +265,7 @@ from all_join
 group by 1,2
 order by 1;
 ```
-** ✅ Results:** 
+**✅ Results:**
 | mth_join | mth_diff | customer_cnt |
 | --- | --- | --- |
 | 1 | M - 0 | 2076 |
@@ -287,20 +287,20 @@ order by 1;
 with 
 raw_data as (
   select
-      extract(month from a.ModifiedDate) as mth 
-      , extract(year from a.ModifiedDate) as yr 
+      extract(month from a.ModifiedDate) as month 
+      , extract(year from a.ModifiedDate) as year 
       , b.Name
       , sum(StockedQty) as stock_qty
 
   from `adventureworks2019.Production.WorkOrder` a
   left join `adventureworks2019.Production.Product` b on a.ProductID = b.ProductID
-  where FORMAT_TIMESTAMP("%Y", a.ModifiedDate) = '2011'
+  where format_timestamp("%Y", a.ModifiedDate) = '2011'
   group by 1,2,3
   order by 1 desc 
 )
 
 select  Name
-      , mth, yr 
+      , month, year 
       , stock_qty
       , stock_prv    
       , round(coalesce((stock_qty /stock_prv -1)*100 ,0) ,1) as diff   
@@ -311,8 +311,8 @@ from (
       )
 order by 1 asc, 2 desc;
 ```
-** ✅ Results:** 
-| Name | mth | yr | stock_qty | stock_prv | diff |
+**✅ Results:**
+| Name | month | year | stock_qty | stock_prv | diff |
 | --- | --- | --- | --- | --- | --- |
 | BB Ball Bearing | 12 | 2011 | 8475 | 14544 | -41.7 |
 | BB Ball Bearing | 11 | 2011 | 14544 | 19175 | -24.2 |
@@ -341,26 +341,26 @@ order by 1 asc, 2 desc;
 with 
 sale_info as (
   select 
-      extract(month from a.ModifiedDate) as mth 
-     , extract(year from a.ModifiedDate) as yr 
+      extract(month from a.ModifiedDate) as month 
+     , extract(year from a.ModifiedDate) as year 
      , a.ProductId
      , b.Name
      , sum(a.OrderQty) as sales
   from `adventureworks2019.Sales.SalesOrderDetail` a 
   left join `adventureworks2019.Production.Product` b 
     on a.ProductID = b.ProductID
-  where FORMAT_TIMESTAMP("%Y", a.ModifiedDate) = '2011'
+  where format_timestamp("%Y", a.ModifiedDate) = '2011'
   group by 1,2,3,4
 ), 
 
 stock_info as (
   select
-      extract(month from ModifiedDate) as mth 
-      , extract(year from ModifiedDate) as yr 
+      extract(month from ModifiedDate) as month 
+      , extract(year from ModifiedDate) as year 
       , ProductId
       , sum(StockedQty) as stock_cnt
   from `adventureworks2019.Production.WorkOrder`
-  where FORMAT_TIMESTAMP("%Y", ModifiedDate) = '2011'
+  where format_timestamp("%Y", ModifiedDate) = '2011'
   group by 1,2,3
 )
 
@@ -371,12 +371,12 @@ select
 from sale_info a 
 full join stock_info b 
   on a.ProductId = b.ProductId
-and a.mth = b.mth 
-and a.yr = b.yr
+and a.month = b.month 
+and a.year = b.year
 order by 1 desc, 7 desc;
 ```
-** ✅ Results:** 
-| mth | yr | ProductId | Name | sales | stock | ratio |
+**✅ Results:** 
+| month | year | ProductId | Name | sales | stock | ratio |
 | --- | --- | --- | --- | --- | --- | --- |
 | 12 | 2011 | 745 | HL Mountain Frame - Black, 48 | 1 | 27 | 27 |
 | 12 | 2011 | 743 | HL Mountain Frame - Black, 42 | 1 | 26 | 26 |
@@ -401,17 +401,17 @@ order by 1 desc, 7 desc;
 **Goal:** Quantify backlog impact on operations and potential unrealized revenue.
 ```sql
 select 
-    extract (year from ModifiedDate) as yr
+    extract (year from ModifiedDate) as year
     , Status
-    , count(distinct PurchaseOrderID) as order_Cnt 
+    , count(distinct PurchaseOrderID) as order 
     , round(sum(TotalDue),2)  as value
 from `adventureworks2019.Purchasing.PurchaseOrderHeader`
 where Status = 1
 and extract(year from ModifiedDate) = 2014
 group by 1,2;
 ```
-** ✅ Results:** 
-| yr | Status | order_Cnt | value |
+**✅ Results:**
+| year | Status | order | value |
 | --- | --- | --- | --- |
 | 2014 | 1 | 224 | 3,873,579.01 |
 

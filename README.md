@@ -17,8 +17,10 @@
 
 ---
 ## 📌 Background & Overview
-🎯 Objective
-This project aims to support decision-making for the sales and inventory management team at a fictional bicycle manufacturing company. We leverage SQL on BigQuery to uncover:
+
+### 🎯 Objective
+
+This project uses **SQL** and **BigQuery** to support decision-making for the sales and inventory management team at a fictional bicycle manufacturing company. We leverage SQL on BigQuery to uncover:
 
  - ✔️ Product subcategory sales trends (volume, value, frequency)
  - ✔️ Year-over-year growth by product line
@@ -26,7 +28,13 @@ This project aims to support decision-making for the sales and inventory managem
  - ✔️ Customer retention patterns
  - ✔️ Inventory fluctuations and planning signals
 
-All queries were executed using SQL with Common Table Expressions (CTEs), joins, aggregation, and analytic functions.
+### 👤 Who is this project for?  
+- ✔️ **Data Analysts & Business Analysts**  
+- ✔️ **Digital Marketing Teams**  
+- ✔️ **E-commerce Managers & Stakeholders**  
+- ✔️ **Business Intelligence Teams**
+
+---
 ## 📂 Dataset Description & Data Structure
 
 ### 📌 Data Source

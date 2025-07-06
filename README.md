@@ -1,9 +1,12 @@
 # Exploring Sales & Product Performance in Bicycle Manufacturing | SQL
-Author: Nguyễn Phương Huy
 
-Date: 2000-15-08
+<img src="https://github.com/user-attachments/assets/4ef22277-5dae-427c-b606-e238e830f35c" width="100%" />
 
-Tools Used: SQL
+**Author:** Nguyễn Phương Huy
+
+**Date:** March 2025
+
+**Tools Used:** SQL
 
 ---
 ## 📑 Table of Contents
@@ -17,15 +20,11 @@ Tools Used: SQL
 🎯 Objective
 This project aims to support decision-making for the sales and inventory management team at a fictional bicycle manufacturing company. We leverage SQL on BigQuery to uncover:
 
-✔️ Product subcategory sales trends (volume, value, frequency)
-
-✔️ Year-over-year growth by product line
-
-✔️ Regional sales performance
-
-✔️ Customer retention patterns
-
-✔️ Inventory fluctuations and planning signals
+ - ✔️ Product subcategory sales trends (volume, value, frequency)
+ - ✔️ Year-over-year growth by product line
+ - ✔️ Regional sales performance
+ - ✔️ Customer retention patterns
+ - ✔️ Inventory fluctuations and planning signals
 
 All queries were executed using SQL with Common Table Expressions (CTEs), joins, aggregation, and analytic functions.
 ## 📂 Dataset Description & Data Structure
@@ -56,7 +55,7 @@ All queries were executed using SQL with Common Table Expressions (CTEs), joins,
 
 ---
 ## ⚒️Main Process
-### Query 01: Calc Quantity of items, Sales value & Order quantity by each Subcategory in L12M
+### Query 01: Calculates Quantity of items, Sales value & Order quantity by each Subcategory in L12M
 **Purpose:** Calculates quantity sold, total sales, and number of orders by product subcategory over the last 12 months.  
 **Goal:** Understand sales performance by product name to identify strong and weak performers.
 ```sql
@@ -92,7 +91,7 @@ order by period;
 | Jul 2013  | Bike Racks  | 422      | 29802.3        | 75        |
 
 **📝 Observation:** Bike Racks dominate sales volume, while Bib-Shorts show lower but consistent demand.
-### Query 02: Calc % YoY growth rate by SubCategory & release top 3 cat with highest grow rate. Can use metric: quantity_item. Round results to 2 decimal
+### Query 02: Calculates % YoY growth rate by SubCategory & release top 3 cat with highest grow rate. Can use metric: quantity_item. Round results to 2 decimal
 **Purpose:** Calculates Year-over-Year growth rate in item quantity by subcategory and identifies top 3 subcategories with highest growth.  
 **Goal:** Detect which subcategories are expanding fastest and deserve investment.
 ```sql
@@ -189,7 +188,7 @@ order by year, rank;
 | 2014 | 1 | 8823 | 3 |
 
 **📝 Observation:** Territory 4 consistently ranks #1 annually, suggesting strong regional performance.
-### Query 04: Calc Total Discount Cost belongs to Seasonal Discount for each SubCategory
+### Query 04: Calculates Total Discount Cost belongs to Seasonal Discount for each SubCategory
 **Purpose:** Calculates the total discount cost applied under "Seasonal Discount" for each subcategory and year.  
 **Goal:** Measure promotional investment and its cost distribution across subcategories.
 ```sql
@@ -334,7 +333,7 @@ order by 1 asc, 2 desc;
 | Fork End | 10 | 2011 | 4670 | 2122 | 120.1 |
 
 **📝 Observation:** Inventory fluctuates drastically (e.g., BB Ball Bearing: -41.7% in Dec), revealing unstable stock management.
-### Query 07: "Calc Ratio of Stock / Sales in 2011 by product name, by month. Order results by month desc, ratio desc. Round Ratio to 1 decimal. mom yoy"
+### Query 07: "Calculates Ratio of Stock / Sales in 2011 by product name, by month. Order results by month desc, ratio desc. Round Ratio to 1 decimal. mom yoy"
 **Purpose:** Identifies product combinations that are frequently purchased together in the same order.
 **Goal:** Support bundling strategies and cross-sell opportunities.
 ```sql
